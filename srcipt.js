@@ -1,6 +1,8 @@
 var numbers = new Array(50);
 var total = 1;
 
+Generate(0,0,0);
+
 function Generate(flag,index,green){
     let bars = document.querySelector(".bars"); 
     while (bars.firstChild) {
@@ -50,7 +52,7 @@ document.getElementById('Sort').addEventListener('click', () => {
                 sorted();
                 total = 1;
             }
-        }, 250)
+        }, 150)
     }
     if(total == 1){
         total = 0;
@@ -98,3 +100,21 @@ function sorted(){
         }, 10)
     }
 }
+
+var slideDown = {
+    distance: '150%',
+    origin: 'top',
+    opacity: null,
+    duration: 1200
+};
+var slideUp = {
+    distance: '150%',
+    origin: 'bottom',
+    opacity: null,
+    duration: 1200
+};
+
+
+ScrollReveal().reveal('#Title', slideDown);
+ScrollReveal().reveal('.buttons', slideUp);
+ScrollReveal().reveal('.visualizer', { scale: 0.85,duration:1200});
