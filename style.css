@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap');
+
+
+*{
+    margin :0px;
+    padding :0px;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+    user-select: none;
+}
+body{
+    min-height: 100vh;
+    background-color: teal;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap:3rem
+}
+
+h2 {
+    color: white;
+    letter-spacing: 1.5px;
+    margin-top: -2rem;
+}
+
+.visualizer{
+    width:min(80%,750px) ;
+    height:500px;
+    border-top: 2px solid rgb(231, 231, 231);
+    display: flex;
+    justify-content: center;
+}
+
+.bars{
+    display: flex;
+    gap:5px;
+    margin-top:7px;
+}
+
+.bar{
+    background-color: rgb(197, 197, 197);
+    width:7.5px
+}
+.bar p{
+    rotate: -90deg;
+    color: white;
+    font-weight: 500;
+    font-size: 8px;
+    transform:translateX(28px);
+}
+
+.buttons{
+    display: flex;
+    gap: 20px;
+}
+
+button{
+    padding: 10px 20px;
+    border-radius: 5px;
+    border:none;
+    background-color: rgb(17, 250, 227);
+    color: white;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    transition:all 250ms ease-in-out;
+}
+
+button:hover{
+    scale:1.1;
+}
+button:active{
+    background-color: rgb(123, 255, 242);
+}
+
+
+@media (max-width : 500px){
+    .visualizer{
+        width:95%;
+    }
+
+    .bars{
+        gap:3px
+    }
+
+    .bar{
+        width:4px;
+    }
+
+    .bar p{
+        font-size: 6px;
+        font-weight: 400;
+    }
+
+    .buttons{
+        width:100%;
+        justify-content: center;
+    }
+}
