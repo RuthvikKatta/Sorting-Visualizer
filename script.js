@@ -10,7 +10,7 @@ function Generate(flag,index,green){
     }
     if(flag === 0){
         for (var i = 0; i < numbers.length; i++) {
-            numbers[i] = Math.floor(Math.random() * 400);
+            numbers[i] = Math.floor(Math.random() * (400-1+1)+1);
         }
     }
     for (var i = 0; i < numbers.length; i++) {
