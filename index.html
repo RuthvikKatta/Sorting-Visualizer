@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,12 +8,21 @@
     <title>Sorting Visualizer</title>
     <link rel="stylesheet" href="./style.css">
 </head>
+
 <body>
     <h2 id="Title">Sorting Visusalizer</h2>
     <div class="visualizer">
         <div class="bars"></div>
     </div>
     <div class="buttons">
+        <div class="Algorithms">
+            <label for="Algos">Select Algorithm :</label>
+            <select id="Algos">
+                <option value="SelectionSort">Selection Sort</option>
+                <option value="InsertionSort">Insertion Sort</option>
+                <option value="BubbleSort">Bubble Sort</option>
+            </select>
+        </div>
         <button id="generate">Generate</button>
         <button id="Sort">Sort</button>
     </div>
