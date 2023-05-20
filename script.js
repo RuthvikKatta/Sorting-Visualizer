@@ -1,36 +1,31 @@
 // Global Variables
 var numbers = new Array(50);
-var total = 1;
 
+const generate = document.getElementById('generate');
+const sort = document.getElementById('Sort');
 
-GenerateIntial();
+window.onload = () => {
+    generateBars();
+};
 
-function GenerateIntial() {
+function generateBars() {
     let bars = document.querySelector(".bars");
-    while (bars.firstChild) {
-        bars.removeChild(bars.firstChild);
-    }
+    bars.innerHTML = "";
+
+    var children = "";
     for (var i = 0; i < numbers.length; i++) {
         numbers[i] = Math.floor(Math.random() * (400 - 5) + 5);
-        let child = document.createElement("div");
-        child.classList.add("bar");
-        child.setAttribute('data-value', `${numbers[i]}`);
-        child.innerHTML = `<p>${numbers[i]}</p>`
-        child.style.height = numbers[i] + "px";
-        bars.appendChild(child);
+        children += `<div class = "bar" style="height:${numbers[i]}px" data-value = "${numbers[i]}"><p>${numbers[i]}</p></div>`
     }
+    bars.innerHTML = children;
 }
 
-document.getElementById('generate').addEventListener('click', function () {
-    if (total == 1) {
-        GenerateIntial();
-        total = 1;
-    }
+generate.addEventListener('click', function () {
+    generateBars();
 });
 
 
-
-document.getElementById('Sort').addEventListener('click', () => {
+sort.addEventListener('click', () => {
 
     // Options Selection 
 
@@ -40,100 +35,84 @@ document.getElementById('Sort').addEventListener('click', () => {
     if (Algorithm === "InsertionSort") {
         var i = 1;
         let parent = document.querySelector(".bars");
-        function myLoop() {
+        function myInsertionSortLoop() {
             insertionSort(i);
             setTimeout(function () {
                 i++;
-                while (parent.firstChild) {
-                    parent.removeChild(parent.firstChild);
-                }
+                parent.innerHTML = "";
+                var children = "";
                 for (var j = 0; j < numbers.length; j++) {
-                    let child = document.createElement("div");
-                    child.classList.add("bar");
-                    child.setAttribute('data-value', `${numbers[j]}`);
-                    child.innerHTML = `<p>${numbers[j]}</p>`
-                    child.style.height = numbers[j] + "px";
-                    parent.appendChild(child);
+                    children += `<div class = "bar" style="height:${numbers[j]}px" data-value = "${numbers[j]}"><p>${numbers[j]}</p></div>`
                 }
+                parent.innerHTML = children;
                 if (i < numbers.length) {
-                    myLoop();
+                    myInsertionSortLoop();
                 }
                 else {
                     sorted();
-                    total = 1;
+                    generate.style.pointerEvents = "all";
+                    sort.style.pointerEvents = "all";
                 }
             }, 250)
         }
-        if (total == 1) {
-            total = 0;
-            myLoop();
-        }
+        generate.style.pointerEvents = "none";
+        sort.style.pointerEvents = "none";
+        myInsertionSortLoop();
     }
 
     else if (Algorithm === "SelectionSort") {
         var i = 0;
-        function myLoop() {
+        function mySelectionSortLoop() {
             selectionsort(i);
             setTimeout(function () {
                 i++;
-                let bars = document.querySelector(".bars");
-                while (bars.firstChild) {
-                    bars.removeChild(bars.firstChild);
-                }
+                let parent = document.querySelector(".bars");
+                parent.innerHTML = "";
+                var children = "";
                 for (var j = 0; j < numbers.length; j++) {
-                    let child = document.createElement("div");
-                    child.classList.add("bar");
-                    child.setAttribute('data-value', `${numbers[j]}`);
-                    child.innerHTML = `<p>${numbers[j]}</p>`
-                    child.style.height = numbers[j] + "px";
-                    bars.appendChild(child);
+                    children += `<div class = "bar" style="height:${numbers[j]}px" data-value = "${numbers[j]}"><p>${numbers[j]}</p></div>`
                 }
+                parent.innerHTML = children;
                 if (i < numbers.length) {
-                    myLoop();
+                    mySelectionSortLoop();
                 }
                 else {
                     sorted();
-                    total = 1;
+                    generate.style.pointerEvents = "all";
+                    sort.style.pointerEvents = "all";
                 }
             }, 500)
         }
-        if (total == 1) {
-            total = 0;
-            myLoop();
-        }
+        generate.style.pointerEvents = "none";
+        sort.style.pointerEvents = "none";
+        mySelectionSortLoop();
     }
 
     else if (Algorithm === "BubbleSort") {
         var i = 0;
-        function myLoop() {
+        function myBubbleSortLoop() {
             bubblesort(i);
             setTimeout(function () {
                 i++;
                 if (i < numbers.length) {
-                    let bars = document.querySelector(".bars");
-                    while (bars.firstChild) {
-                        bars.removeChild(bars.firstChild);
-                    }
+                    let parent = document.querySelector(".bars");
+                    parent.innerHTML = "";
+                    var children = "";
                     for (var j = 0; j < numbers.length; j++) {
-                        let child = document.createElement("div");
-                        child.classList.add("bar");
-                        child.setAttribute('data-value', `${numbers[j]}`);
-                        child.innerHTML = `<p>${numbers[j]}</p>`
-                        child.style.height = numbers[j] + "px";
-                        bars.appendChild(child);
+                        children += `<div class = "bar" style="height:${numbers[j]}px" data-value = "${numbers[j]}"><p>${numbers[j]}</p></div>`
                     }
-                    myLoop();
-                }
-                else {
+                    parent.innerHTML = children;
+                    myBubbleSortLoop();
+                }else {
                     sorted();
-                    total = 1;
+                    generate.style.pointerEvents = "all";
+                    sort.style.pointerEvents = "all";
                 }
-            }, 500)
+            }, 250)
         }
-        if (total == 1) {
-            total = 0;
-            myLoop();
-        }
+        generate.style.pointerEvents = "none";
+        sort.style.pointerEvents = "none";
+        myBubbleSortLoop();    
     }
 })
 
@@ -144,7 +123,7 @@ function insertionSort(i) {
     let bars = document.querySelectorAll('.bar');
     bars[i].style.background = "red";
     if (g>=0 && g != i)
-        bars[g-1].style.background = "rgb(72, 250, 120)";
+        bars[g-1].style.background = "#40f736";
     g = -1;
     for (var j = i; j > 0; j--) {
         if (numbers[j] < numbers[j - 1]) {
@@ -160,23 +139,14 @@ function insertionSort(i) {
 
 function bubblesort(i) {
     let bars = document.querySelectorAll('.bar');
-    var j = 0; 
-    function bubbleloop() {
+    for (var j = 0; j < numbers.length-i-1; j++) {
         if (numbers[j] > numbers[j + 1]) {
             var temp = numbers[j];
             numbers[j] = numbers[j + 1];
             numbers[j + 1] = temp;
         }
-        bars[(numbers.length - i - 1) - j].style.background = "rgb(72, 250, 120)";
-        bars[numbers.length - i - 1].style.background = "red";
-        setTimeout(function () {
-            j++;
-            if (j < numbers.length - i) {
-                bubbleloop();
-            }
-        }, 5)
     }
-    bubbleloop();
+    bars[Math.round(Math.random()*(numbers.length-i-1))].style.background = "red";
 }
 
 // Selection Sort
@@ -189,7 +159,7 @@ function selectionsort(i) {
     bars[i].style.background = "red";
     function Selectionloop() {
         if (j < numbers.length)
-            bars[j].style.background = "rgb(72, 250, 120)";
+            bars[j].style.background = "#40f736";
         if (min > numbers[j]) {
             min = numbers[j];
             min_index = j;
@@ -202,7 +172,7 @@ function selectionsort(i) {
                 var temp = numbers[min_index];
                 numbers[min_index] = numbers[i];
                 numbers[i] = temp;
-                bars[min_index].style.background = "blue";
+                bars[min_index].style.background = "#0051ff";
                 return min_index;
             }
         }, 5)
@@ -218,28 +188,23 @@ function sorted() {
         one.style.background = "white";
     }
     var i = 0;
-    function myLoopgreen() {
+    function myGreenLoop() {
         bars[i].style.background = "lightgreen";
         setTimeout(function () {
             i++;
             if (i < numbers.length) {
-                myLoopgreen();
+                myGreenLoop();
             }
             else {
-                i = 0;
-                myLoopwhite();
+                white()
             }
-        }, 2.5)
+        }, 5)
     }
-    myLoopgreen();
-    function myLoopwhite() {
-        bars[i].style.background = "white";
-        setTimeout(function () {
-            i++;
-            if (i < numbers.length) {
-                myLoopwhite();
-            }
-        }, 2.5)
+    myGreenLoop();
+
+    const white = () => {
+        for(var i = 0;i<bars.length;i++)
+            bars[i].style.background = "white";
     }
 }
 
@@ -260,3 +225,15 @@ var slideUp = {
 ScrollReveal().reveal('#Title', slideDown);
 ScrollReveal().reveal('.buttons', slideUp);
 ScrollReveal().reveal('.visualizer', { scale: 0.85, duration: 1200 });
+
+
+// function myLoop() {
+//     setTimeout(function () {
+//         i++;
+//         if (i < numbers.length) {
+            
+//             myLoop();
+//         }
+//     }, 500)
+//     myLoop();
+// }
