@@ -1,62 +1,121 @@
 // Global Variables
-var numbers = new Array(50);
+const SIZE = 50;
 
-const generate = document.getElementById('generate');
-const sort = document.getElementById('Sort');
+var numbers = new Array(SIZE);
+
+const generate = document.getElementById('generate')
+const sort = document.getElementById('Sort')
+const select = document.getElementById("Algos")
+const speedChanger = document.getElementById('speed')
+const increaseButton = document.querySelector('.increase')
+const decreaseButton = document.querySelector('.decrease')
+const arrayaccess = document.querySelector('.arrayAccess')
+const swaps = document.querySelector('.swaps')
+
+
+var noOfSwaps = 0
+var noOfArrayAccess = 0
+var speed = 350
+var Algorithm = select.value
 
 window.onload = () => {
     generateBars();
 };
 
 function generateBars() {
+    var digits = new Array();
+
+    var i = 0
+    while(digits.length != SIZE){
+        i = i + 8
+        digits.push(i);
+    }
+
     let bars = document.querySelector(".bars");
     bars.innerHTML = "";
 
     var children = "";
     for (var i = 0; i < numbers.length; i++) {
-        numbers[i] = Math.floor(Math.random() * (400 - 5) + 5);
+        var index = Math.floor(Math.random()*digits.length);
+        numbers[i] = digits[index];
+        digits.splice(index,1);
         children += `<div class = "bar" style="height:${numbers[i]}px" data-value = "${numbers[i]}"><p>${numbers[i]}</p></div>`
     }
     bars.innerHTML = children;
+
+    sort.style.pointerEvents = "all"
+    swaps.innerHTML = `Swaps : 0`
+    arrayaccess.innerHTML = `Array Accesses : 0`
+    speedChanger.value = 40
+    noOfSwaps = 0
+    noOfArrayAccess = 0
 }
+
+function updateSpeed(){
+    if (speedChanger.value > 60)
+        speed = 1000 - parseInt(speedChanger.value) * 10
+    else
+        speed = 1000 - parseInt(speedChanger.value) * 10
+}
+
+increaseButton.addEventListener('click',()=>{
+    speedChanger.value = parseInt(speedChanger.value) + 5
+    updateSpeed()
+})
+
+decreaseButton.addEventListener('click',()=>{
+    speedChanger.value = parseInt(speedChanger.value) - 5
+    updateSpeed()
+})
+
+speedChanger.addEventListener('input',()=>{
+    updateSpeed();
+})
 
 generate.addEventListener('click', function () {
     generateBars();
 });
 
 
+select.addEventListener('change',function(){
+    generateBars();
+    Algorithm = select.value;
+})
+
+// Sort Button
 sort.addEventListener('click', () => {
 
+    // Disabling Buttons and dropdown.
+
+    generate.style.pointerEvents = "none";
+    sort.style.pointerEvents = "none";
+    select.style.pointerEvents = "none";
+    
     // Options Selection 
 
-    let select = document.getElementById("Algos");
-    Algorithm = select.value;
-
-    if (Algorithm === "InsertionSort") {
+    if(Algorithm === 'QuickSort'){
+        quickSort(numbers);
+    }
+    else if(Algorithm === 'MergeSort'){
+        mergeSort(numbers,0,numbers.length - 1);
+    }
+    else if (Algorithm === "InsertionSort") {
         var i = 1;
-        let parent = document.querySelector(".bars");
         function myInsertionSortLoop() {
             insertionSort(i);
             setTimeout(function () {
                 i++;
-                parent.innerHTML = "";
-                var children = "";
-                for (var j = 0; j < numbers.length; j++) {
-                    children += `<div class = "bar" style="height:${numbers[j]}px" data-value = "${numbers[j]}"><p>${numbers[j]}</p></div>`
-                }
-                parent.innerHTML = children;
+                generateInLoops();
                 if (i < numbers.length) {
+                    swaps.innerHTML = `Swaps : ${noOfSwaps}`
+                    arrayaccess.innerHTML = `Array Accesses : ${noOfArrayAccess}`
                     myInsertionSortLoop();
                 }
                 else {
                     sorted();
-                    generate.style.pointerEvents = "all";
-                    sort.style.pointerEvents = "all";
                 }
-            }, 250)
+            }, speed)
         }
-        generate.style.pointerEvents = "none";
-        sort.style.pointerEvents = "none";
         myInsertionSortLoop();
     }
 
@@ -66,55 +125,135 @@ sort.addEventListener('click', () => {
             selectionsort(i);
             setTimeout(function () {
                 i++;
-                let parent = document.querySelector(".bars");
-                parent.innerHTML = "";
-                var children = "";
-                for (var j = 0; j < numbers.length; j++) {
-                    children += `<div class = "bar" style="height:${numbers[j]}px" data-value = "${numbers[j]}"><p>${numbers[j]}</p></div>`
-                }
-                parent.innerHTML = children;
+                generateInLoops();
                 if (i < numbers.length) {
+                    swaps.innerHTML = `Swaps : ${noOfSwaps}`
+                    arrayaccess.innerHTML = `Array Accesses : ${noOfArrayAccess}`
                     mySelectionSortLoop();
                 }
                 else {
                     sorted();
-                    generate.style.pointerEvents = "all";
-                    sort.style.pointerEvents = "all";
                 }
-            }, 500)
+            }, speed)
         }
-        generate.style.pointerEvents = "none";
-        sort.style.pointerEvents = "none";
         mySelectionSortLoop();
     }
-
     else if (Algorithm === "BubbleSort") {
-        var i = 0;
+        var i = numbers.length;
         function myBubbleSortLoop() {
             bubblesort(i);
             setTimeout(function () {
-                i++;
-                if (i < numbers.length) {
-                    let parent = document.querySelector(".bars");
-                    parent.innerHTML = "";
-                    var children = "";
-                    for (var j = 0; j < numbers.length; j++) {
-                        children += `<div class = "bar" style="height:${numbers[j]}px" data-value = "${numbers[j]}"><p>${numbers[j]}</p></div>`
-                    }
-                    parent.innerHTML = children;
+                i--;
+                generateInLoops();
+                if (i >= 0) {
+                    swaps.innerHTML = `Swaps : ${noOfSwaps}`
+                    arrayaccess.innerHTML = `Array Accesses : ${noOfArrayAccess}`
                     myBubbleSortLoop();
                 }else {
                     sorted();
-                    generate.style.pointerEvents = "all";
-                    sort.style.pointerEvents = "all";
                 }
-            }, 250)
+            }, speed)
         }
-        generate.style.pointerEvents = "none";
-        sort.style.pointerEvents = "none";
         myBubbleSortLoop();    
     }
 })
+
+function swap(array, i, j) {
+    const temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+    noOfArrayAccess += 5
+    noOfSwaps++
+}
+
+// Merge Sort
+
+function mergeSort(array,low,high){
+    if(low < high){
+        var mid = Math.floor((low + high) / 2);
+        mergeSort(array,low,mid);
+        mergeSort(array,mid+1,high);
+        merge(array,low,mid,high);
+        store(array,noOfSwaps,noOfArrayAccess)
+    }
+    if(low == 0 && high == numbers.length-1){
+        myGenerationLoop();
+    }
+}
+
+function merge(arr,l,m,r){
+    var n1 = m - l + 1;
+    var n2 = r - m;
+
+    var L = new Array(n1);
+    var R = new Array(n2);
+
+    for (var i = 0; i < n1; ++i)
+        L[i] = arr[l + i];
+    for (var j = 0; j < n2; ++j)
+        R[j] = arr[m + 1 + j];
+
+    var i = 0, j = 0;
+
+    var k = l;
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) {
+            arr[k] = L[i];
+            i++;
+        }
+        else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < n1) {
+        arr[k++] = L[i++];
+    }
+
+    while (j < n2) {
+        arr[k++] = R[j++];
+    }
+
+    noOfArrayAccess += 3*n1 + 3*n2
+}
+
+
+// QuickSort
+
+function quickSort(array) {
+    quickSortHelper(array, 0, array.length - 1);
+}
+
+function quickSortHelper(array, low, high) {
+    if (low < high) {
+        const pivotIndex = partition(array, low, high);
+        quickSortHelper(array, low, pivotIndex - 1);
+        quickSortHelper(array, pivotIndex + 1, high);
+    }
+    if(low == 0 && high == numbers.length-1){
+        store(array,noOfSwaps,noOfArrayAccess)
+        myGenerationLoop();
+    }
+}
+
+function partition(array,low,high){
+    const pivot = array[high];
+    let i = low - 1;
+    
+    for (let j = low; j < high; j++) {
+        if (array[j] < pivot) {
+            i++;
+            swap(array, i, j);
+            store(array,noOfSwaps,noOfArrayAccess)
+        }
+        noOfArrayAccess+=2;
+    }
+    
+    swap(array, i + 1, high);
+    return i + 1;
+}
 
 // Insertion Sort
 
@@ -130,8 +269,11 @@ function insertionSort(i) {
             var temp = numbers[j];
             numbers[j] = numbers[j - 1];
             numbers[j - 1] = temp;
+            noOfSwaps++
+            noOfArrayAccess += 5
             g = j;
         }
+        noOfArrayAccess+=2
     }
 }
 
@@ -139,14 +281,17 @@ function insertionSort(i) {
 
 function bubblesort(i) {
     let bars = document.querySelectorAll('.bar');
-    for (var j = 0; j < numbers.length-i-1; j++) {
+    for (var j = 0; j < i; j++) {
         if (numbers[j] > numbers[j + 1]) {
             var temp = numbers[j];
             numbers[j] = numbers[j + 1];
             numbers[j + 1] = temp;
+            noOfSwaps++
+            noOfArrayAccess += 3
         }
+        noOfArrayAccess+=2
     }
-    bars[Math.round(Math.random()*(numbers.length-i-1))].style.background = "red";
+    bars[Math.round(Math.random()*(i))].style.background = "red";
 }
 
 // Selection Sort
@@ -159,11 +304,13 @@ function selectionsort(i) {
     bars[i].style.background = "red";
     function Selectionloop() {
         if (j < numbers.length)
-            bars[j].style.background = "#40f736";
+            bars[j].style.background = "lightgreen";
         if (min > numbers[j]) {
             min = numbers[j];
             min_index = j;
+            noOfArrayAccess+=2
         }
+        noOfArrayAccess++
         setTimeout(function () {
             j++;
             if (j < numbers.length) {
@@ -172,17 +319,22 @@ function selectionsort(i) {
                 var temp = numbers[min_index];
                 numbers[min_index] = numbers[i];
                 numbers[i] = temp;
+                noOfSwaps++
+                noOfArrayAccess += 5
                 bars[min_index].style.background = "#0051ff";
                 return min_index;
             }
-        }, 5)
+        }, 1)
     }
     Selectionloop();
 }
 
 // Sorted
-
 function sorted() {
+
+    select.style.pointerEvents = "all";
+    generate.style.pointerEvents = "all";
+
     let bars = document.querySelectorAll('.bar');
     for (let one of bars) {
         one.style.background = "white";
@@ -196,35 +348,90 @@ function sorted() {
                 myGreenLoop();
             }
             else {
+                i = 0;
+                white()
+            }
+        }, 1)
+    }
+    myGreenLoop();
+
+    function white(){
+        bars[i].style.background = "white";
+        setTimeout(function () {
+            i++;
+            if (i < numbers.length) {
                 white()
             }
         }, 5)
     }
-    myGreenLoop();
-
-    const white = () => {
-        for(var i = 0;i<bars.length;i++)
-            bars[i].style.background = "white";
-    }
 }
 
-var slideDown = {
-    distance: '150%',
-    origin: 'top',
-    opacity: null,
-    duration: 1200
-};
-var slideUp = {
-    distance: '150%',
-    origin: 'bottom',
-    opacity: null,
-    duration: 1200
-};
+var data = new Array();
+var index = 0;
+function store(array,noofswaps,noofarrayaccess) {
+    var string = "";
+    for (var i = 0; i < numbers.length; i++) {
+        string += array[i] + " ";
+    }
+    string += noofswaps + " "
+    string += noofarrayaccess
+    const subarray = string.split(" ");
+    if(data.includes(subarray)){
+        return;
+    }
+    data.push(subarray);
+}
+
+function myGenerationLoop(){
+    setTimeout(function(){
+        index++;
+        if (index < data.length) {
+            let parent = document.querySelector(".bars");
+            parent.innerHTML = "";
+            var children = "";
+            for (var j = 0; j < numbers.length; j++) {
+                children += `<div class = "bar" style="height:${data[index][j]}px" data-value = "${data[index][j]}">
+                <p>${data[index][j]}</p>
+                </div>`
+            }
+            parent.innerHTML = children;
+            swaps.innerHTML = `Swaps : ${data[index][SIZE]}`
+            arrayaccess.innerHTML = `Array Accesses : ${data[index][SIZE + 1]}`
+            myGenerationLoop();
+        }
+        else{
+            sorted();
+        }
+    }, speed)
+}
+
+function generateInLoops(){
+    let parent = document.querySelector(".bars");
+    parent.innerHTML = "";
+    var children = "";
+    for (var j = 0; j < numbers.length; j++) {
+        children += `<div class = "bar" style="height:${numbers[j]}px" data-value = "${numbers[j]}"><p>${numbers[j]}</p></div>`
+    }
+    parent.innerHTML = children;
+}
+
+// var slideDown = {
+//     distance: '150%',
+//     origin: 'top',
+//     opacity: null,
+//     duration: 500
+// };
+// var slideUp = {
+//     distance: '150%',
+//     origin: 'bottom',
+//     opacity: null,
+//     duration: 500
+// };
 
 
-ScrollReveal().reveal('#Title', slideDown);
-ScrollReveal().reveal('.buttons', slideUp);
-ScrollReveal().reveal('.visualizer', { scale: 0.85, duration: 1200 });
+// ScrollReveal().reveal('#Title', slideDown);
+// ScrollReveal().reveal('.buttons', slideUp);
+// ScrollReveal().reveal('.visualizer', { scale: 0.85, duration: 500 });
 
 
 // function myLoop() {

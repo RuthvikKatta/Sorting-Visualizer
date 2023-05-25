@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <h2 id="Title">Sorting Visusalizer</h2>
+    <h2 id="Title">Sorting Visualizer</h2>
     <div class="visualizer">
         <div class="bars"></div>
     </div>
@@ -18,6 +18,8 @@
         <label for="Algos">Select Algorithm : </label>
         <div class="Algorithms">
             <select id="Algos">
+                <option value="QuickSort">Quick Sort</option>
+                <option value="MergeSort">Merge Sort</option>
                 <option value="SelectionSort">Selection Sort</option>
                 <option value="InsertionSort">Insertion Sort</option>
                 <option value="BubbleSort">Bubble Sort</option>
@@ -26,7 +28,18 @@
         <button id="generate">Generate</button>
         <button id="Sort">Sort</button>
     </div>
+    <div class="details">
+        <p class="arrayAccess">Array Accesses : 0</p>
+        <p class="swaps">Swaps : 0</p>
+        <div class="speed">
+            <p>Visualization Speed</p>
+            <span class="decrease"> - </span>
+            <input type="range" id="speed" min="0" max="80" step="5">
+            <span class="increase"> + </span>
+        </div>
+    </div>
 </body>
-<script src="https://unpkg.com/scrollreveal"></script>
+<!-- <script src="https://unpkg.com/scrollreveal"></script> -->
 <script src="./script.js"></script>
+
 </html>
