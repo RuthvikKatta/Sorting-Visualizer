@@ -302,31 +302,19 @@ function selectionsort(i) {
     var j = i + 1;
     let bars = document.querySelectorAll('.bar');
     bars[i].style.background = "red";
-    function Selectionloop() {
-        if (j < numbers.length)
-            bars[j].style.background = "lightgreen";
+    for(j = i + 1 ; j<numbers.length;j++){
         if (min > numbers[j]) {
             min = numbers[j];
             min_index = j;
             noOfArrayAccess+=2
         }
-        noOfArrayAccess++
-        setTimeout(function () {
-            j++;
-            if (j < numbers.length) {
-                Selectionloop();
-            } else {
-                var temp = numbers[min_index];
-                numbers[min_index] = numbers[i];
-                numbers[i] = temp;
-                noOfSwaps++
-                noOfArrayAccess += 5
-                bars[min_index].style.background = "#0051ff";
-                return min_index;
-            }
-        }, 1)
     }
-    Selectionloop();
+    var temp = numbers[min_index];
+    numbers[min_index] = numbers[i];
+    numbers[i] = temp;
+    noOfSwaps++
+    noOfArrayAccess += 5
+    bars[min_index].style.background = "#0051ff";
 }
 
 // Sorted
@@ -414,33 +402,3 @@ function generateInLoops(){
     }
     parent.innerHTML = children;
 }
-
-// var slideDown = {
-//     distance: '150%',
-//     origin: 'top',
-//     opacity: null,
-//     duration: 500
-// };
-// var slideUp = {
-//     distance: '150%',
-//     origin: 'bottom',
-//     opacity: null,
-//     duration: 500
-// };
-
-
-// ScrollReveal().reveal('#Title', slideDown);
-// ScrollReveal().reveal('.buttons', slideUp);
-// ScrollReveal().reveal('.visualizer', { scale: 0.85, duration: 500 });
-
-
-// function myLoop() {
-//     setTimeout(function () {
-//         i++;
-//         if (i < numbers.length) {
-            
-//             myLoop();
-//         }
-//     }, 500)
-//     myLoop();
-// }
