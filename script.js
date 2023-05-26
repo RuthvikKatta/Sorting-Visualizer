@@ -20,7 +20,7 @@ var noOfSwaps = 0
 var noOfArrayAccess = 0
 var speed = 350
 var Algorithm = select.value
-var clr
+var clr = "teal"
 
 window.onload = () => {
     generateBars();
