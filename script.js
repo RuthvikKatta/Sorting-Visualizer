@@ -11,16 +11,53 @@ const increaseButton = document.querySelector('.increase')
 const decreaseButton = document.querySelector('.decrease')
 const arrayaccess = document.querySelector('.arrayAccess')
 const swaps = document.querySelector('.swaps')
+const arrow = document.querySelector(".arrow");
+const themes = document.querySelector(".themes");
+
 
 
 var noOfSwaps = 0
 var noOfArrayAccess = 0
 var speed = 350
 var Algorithm = select.value
+var clr
 
 window.onload = () => {
     generateBars();
+	clr = localStorage.getItem('color')
+	document.documentElement.style.setProperty("--primary", clr);
+    colors.forEach((color) => {
+        if (clr === getComputedStyle(color).getPropertyValue("--clr")) {
+            color.checked = true
+        }
+    });
 };
+
+arrow.addEventListener("click", () => {
+	let child = arrow.firstChild;
+	if (child.classList.contains("fa-angle-up")) {
+		arrow.innerHTML = `<i class="fa fa-angle-down"></i>`;
+		themes.classList.add("collapse");
+	} else {
+		arrow.innerHTML = `<i class="fa fa-angle-up"></i>`;
+		themes.classList.remove("collapse");
+	}
+});
+
+const colors = document.querySelectorAll(".color");
+colors.forEach((color) => {
+	color.addEventListener("change", () => {
+		if (color.checked) {
+			var clr = getComputedStyle(color).getPropertyValue("--clr");
+			document.documentElement.style.setProperty("--primary", clr);
+			UpdateLocalStorage(clr)
+		}
+	});
+});
+
+function UpdateLocalStorage(clr){
+	localStorage.setItem("color",clr)
+}
 
 function generateBars() {
     var digits = new Array();
@@ -354,6 +391,7 @@ function sorted() {
     }
 }
 
+
 var data = new Array();
 var index = 0;
 function store(array,noofswaps,noofarrayaccess) {
@@ -364,10 +402,9 @@ function store(array,noofswaps,noofarrayaccess) {
     string += noofswaps + " "
     string += noofarrayaccess
     const subarray = string.split(" ");
-    if(data.includes(subarray)){
-        return;
+    if(!data.includes(subarray)){
+        data.push(subarray);
     }
-    data.push(subarray);
 }
 
 function myGenerationLoop(){
@@ -402,3 +439,33 @@ function generateInLoops(){
     }
     parent.innerHTML = children;
 }
+
+// var slideDown = {
+//     distance: '150%',
+//     origin: 'top',
+//     opacity: null,
+//     duration: 500
+// };
+// var slideUp = {
+//     distance: '150%',
+//     origin: 'bottom',
+//     opacity: null,
+//     duration: 500
+// };
+
+
+// ScrollReveal().reveal('#Title', slideDown);
+// ScrollReveal().reveal('.buttons', slideUp);
+// ScrollReveal().reveal('.visualizer', { scale: 0.85, duration: 500 });
+
+
+// function myLoop() {
+//     setTimeout(function () {
+//         i++;
+//         if (i < numbers.length) {
+            
+//             myLoop();
+//         }
+//     }, 500)
+//     myLoop();
+// }
