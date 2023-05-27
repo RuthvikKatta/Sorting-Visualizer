@@ -20,11 +20,12 @@ var noOfSwaps = 0
 var noOfArrayAccess = 0
 var speed = 350
 var Algorithm = select.value
-var clr = "teal"
+var clr
 
 window.onload = () => {
     generateBars();
 	clr = localStorage.getItem('color')
+    if(clr === null) clr = "teal"
 	document.documentElement.style.setProperty("--primary", clr);
     colors.forEach((color) => {
         if (clr === getComputedStyle(color).getPropertyValue("--clr")) {
@@ -135,6 +136,9 @@ sort.addEventListener('click', () => {
     }
     else if(Algorithm === 'MergeSort'){
         mergeSort(numbers,0,numbers.length - 1);
+    }
+    else if(Algorithm === 'HeapSort'){
+        heapSort(numbers)
     }
     else if (Algorithm === "InsertionSort") {
         var i = 1;
@@ -353,6 +357,51 @@ function selectionsort(i) {
     noOfArrayAccess += 5
     bars[min_index].style.background = "#0051ff";
 }
+
+// Heap Sort
+
+function heapSort(array){
+    var n = array.length;
+
+    
+    for(var i = n/2 - 1 ; i >= 0; i--){
+        Heapify(array,n,i)
+        noOfArrayAccess++;
+    }
+    
+    for(var i = 1; i < n; i++){
+        noOfArrayAccess++;
+        swap(array,0,n-i);
+        Heapify(array,n-i,0)
+    }
+    store(array,noOfSwaps,noOfArrayAccess)
+
+    myGenerationLoop()
+}
+
+function Heapify(array, size, i){
+
+    var largest = i
+    var left = 2*i+1
+    var right = 2*i+2
+    
+    if(left < size && array[left] > array[largest]){
+        largest = left
+    }
+
+    if(right < size && array[right] > array[largest]){
+        largest = right
+    }
+
+    noOfArrayAccess += 4
+
+    if(largest != i){
+        swap(array,i,largest)
+        store(array,noOfSwaps,noOfArrayAccess)
+        Heapify(array,size,largest)
+    }
+}
+
 
 // Sorted
 function sorted() {
