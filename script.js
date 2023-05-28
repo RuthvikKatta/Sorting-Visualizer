@@ -85,6 +85,7 @@ function generateBars() {
     swaps.innerHTML = `Swaps : 0`
     arrayaccess.innerHTML = `Array Accesses : 0`
     speedChanger.value = 40
+    speed = 350
     noOfSwaps = 0
     noOfArrayAccess = 0
 }
