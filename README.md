@@ -1,6 +1,8 @@
 # Sorting-Visualizer
 A web application that allows you to visualize the different sorting algorithms.[Click here for Visualizer](https://ruthvikkatta.github.io/Sorting-Visualizer/)
 
+![Preview](./assets/Preview.jpg)
+
 
 ## Features
 1. Supports a variety of sorting algorithms, including bubble sort, selection sort, insertion sort, merge sort, quicksort, and heap sort.
