@@ -11,8 +11,9 @@ const increaseButton = document.querySelector('.increase')
 const decreaseButton = document.querySelector('.decrease')
 const arrayaccess = document.querySelector('.arrayAccess')
 const swaps = document.querySelector('.swaps')
-const arrow = document.querySelector(".arrow");
-const themes = document.querySelector(".themes");
+const arrow = document.querySelector(".arrow")
+const themes = document.querySelector(".themes")
+const title = document.getElementById('Title')
 
 
 
@@ -20,12 +21,12 @@ var noOfSwaps = 0
 var noOfArrayAccess = 0
 var speed = 350
 var Algorithm = select.value
-var clr
+var clr = "#008080"
 
 window.onload = () => {
     generateBars();
 	clr = localStorage.getItem('color')
-    if(clr === null) clr = "teal"
+    if(clr === null) clr = "#008080"
 	document.documentElement.style.setProperty("--primary", clr);
     colors.forEach((color) => {
         if (clr === getComputedStyle(color).getPropertyValue("--clr")) {
@@ -85,9 +86,9 @@ function generateBars() {
     swaps.innerHTML = `Swaps : 0`
     arrayaccess.innerHTML = `Array Accesses : 0`
     speedChanger.value = 40
-    speed = 350
     noOfSwaps = 0
     noOfArrayAccess = 0
+    speed = 350
 }
 
 function updateSpeed(){
@@ -98,11 +99,25 @@ function updateSpeed(){
 }
 
 increaseButton.addEventListener('click',()=>{
+    if(speedChanger.value >= 75){
+        increaseButton.style.opacity = "0.7";
+        increaseButton.style.cursor = "not-allowed";
+    } else {
+        decreaseButton.style.opacity = "1";
+        decreaseButton.style.cursor = "pointer";
+    }
     speedChanger.value = parseInt(speedChanger.value) + 5
     updateSpeed()
 })
 
 decreaseButton.addEventListener('click',()=>{
+    if(speedChanger.value <= 5){
+        decreaseButton.style.opacity = "0.7";
+        decreaseButton.style.cursor = "not-allowed";
+    } else {
+        increaseButton.style.opacity = "1";
+        increaseButton.style.cursor = "pointer";
+    }
     speedChanger.value = parseInt(speedChanger.value) - 5
     updateSpeed()
 })
@@ -119,29 +134,37 @@ generate.addEventListener('click', function () {
 select.addEventListener('change',function(){
     generateBars();
     Algorithm = select.value;
+    var text = select.options[select.selectedIndex].text
+    title.innerText = text + ' Visualizer';
 })
 
 // Sort Button
 sort.addEventListener('click', () => {
 
     // Disabling Buttons and dropdown.
-
     generate.style.pointerEvents = "none";
     sort.style.pointerEvents = "none";
     select.style.pointerEvents = "none";
     
     // Options Selection 
-
     if(Algorithm === 'QuickSort'){
         quickSort(numbers);
-    }
-    else if(Algorithm === 'MergeSort'){
+    } else if(Algorithm === 'MergeSort'){
         mergeSort(numbers,0,numbers.length - 1);
-    }
-    else if(Algorithm === 'HeapSort'){
+    } else if(Algorithm === 'HeapSort'){
         heapSort(numbers)
-    }
-    else if (Algorithm === "InsertionSort") {
+    } else if(Algorithm === 'CocktailSort'){
+        cocktailShakerSort(numbers)
+    } else if(Algorithm === 'CountingSort'){
+        sorted(10)
+        setTimeout(()=>{
+            countingSort(numbers)
+        },1000)
+    } else if(Algorithm === 'RadixSort'){
+        radixSort(numbers)
+    } else if(Algorithm === 'GravitySort'){
+        gravitySort(numbers)
+    } else if (Algorithm === "InsertionSort") {
         var i = 1;
         function myInsertionSortLoop() {
             insertionSort(i);
@@ -159,9 +182,7 @@ sort.addEventListener('click', () => {
             }, speed)
         }
         myInsertionSortLoop();
-    }
-
-    else if (Algorithm === "SelectionSort") {
+    } else if (Algorithm === "SelectionSort") {
         var i = 0;
         function mySelectionSortLoop() {
             selectionsort(i);
@@ -179,8 +200,7 @@ sort.addEventListener('click', () => {
             }, speed)
         }
         mySelectionSortLoop();
-    }
-    else if (Algorithm === "BubbleSort") {
+    } else if (Algorithm === "BubbleSort") {
         var i = numbers.length;
         function myBubbleSortLoop() {
             bubblesort(i);
@@ -403,9 +423,199 @@ function Heapify(array, size, i){
     }
 }
 
+// CockTailShaker Sort
+
+function cocktailShakerSort(arr){
+    var startIdx = 0;
+    var endIdx = arr.length;
+    var swapped = true;
+
+    while (swapped === true) {
+        swapped = false
+        for (var i = startIdx; i < endIdx - 1; ++i) {
+            if (arr[i] > arr[i + 1]){
+                swap(arr, i, i + 1)
+                swapped = true
+            }
+        }
+        store(arr, noOfSwaps ,noOfArrayAccess)
+
+        if(swapped === false)
+            break
+
+        swapped = false
+
+        for (var i = endIdx - 1; i >= startIdx; i--) {
+            if (arr[i] > arr[i + 1]){
+                swap(arr, i, i + 1)
+                swapped = true
+            }
+        }
+        store(arr, noOfSwaps ,noOfArrayAccess)
+
+        endIdx--;
+        startIdx++;
+    }
+    myGenerationLoop()
+}
+
+// Counting Sort
+
+function countingSort(arr){
+
+    var maxNumber = arr[0]
+    for(var i = 0; i < arr.length; i++)
+        maxNumber = Math.max(maxNumber,arr[i])
+
+    var helperArray = new Array(maxNumber + 1)
+    helperArray.fill(0)
+
+    for(var i = 0; i < arr.length; i++)
+        helperArray[arr[i]]++;
+    
+    for(var i = 1; i < helperArray.length; i++)
+        helperArray[i] += helperArray[i - 1]
+    
+    var sortedArray = arr.slice()
+    for(var i = arr.length - 1; i >= 0; i--){
+        sortedArray[helperArray[arr[i]] - 1] = arr[i]
+        --helperArray[arr[i]]
+        noOfArrayAccess += 4
+        store(sortedArray,noOfSwaps,noOfArrayAccess)
+    }
+
+    store(sortedArray,noOfSwaps,noOfArrayAccess)
+
+    myGenerationLoop();
+}
+
+// Radix Sort
+
+function radixSort(arr) {
+    var m = arr[0];
+    var i;
+    var bucketSize = 3
+    
+    for (i = 0; i < arr.length; i++) {
+      m = Math.max(m, arr[i]);
+    }
+
+    for (var exp = 1; Math.floor(m / exp) > 0; exp *= bucketSize) {
+      radixSortHelper(arr, arr.length, exp ,bucketSize);
+      store(arr, noOfSwaps, noOfArrayAccess)
+    }
+
+    radixGenerate();
+}
+  
+function radixSortHelper(arr, n, exp ,bucketSize) {
+    var output = new Array(n).fill(0);
+    var i;
+    var count = new Array(bucketSize).fill(0); // Initialize count array with zeros
+    
+    for (i = 0; i < n; i++) {
+      var index = Math.floor(arr[i] / exp) % bucketSize;
+      count[index]++;
+    }
+    
+    for (i = 1; i < bucketSize; i++) {
+      count[i] += count[i - 1];
+    }
+    
+    for (i = n - 1; i >= 0; i--) {
+      var index = Math.floor(arr[i] / exp) % bucketSize;
+      output[count[index] - 1] = arr[i];
+      count[index]--;
+    }
+    
+    for (i = 0; i < n; i++) {
+      arr[i] = output[i];
+    }
+
+    noOfArrayAccess += 200
+}
+
+function radixGenerate(){
+    if(index < data.length - 1)
+        sorted(15)
+    else 
+        sorted()
+    setTimeout(function(){
+        index++;
+        if (index < data.length) {
+            let parent = document.querySelector(".bars");
+            parent.innerHTML = "";
+            var children = "";
+            for (var j = 0; j < numbers.length; j++) {
+                children += `<div class = "bar" style="height:${data[index][j]}px" data-value = "${data[index][j]}">
+                <p>${data[index][j]}</p>
+                </div>`
+            }
+            parent.innerHTML = children;
+            swaps.innerHTML = `Swaps : ${data[index][SIZE]}`
+            arrayaccess.innerHTML = `Array Accesses : ${data[index][SIZE + 1]}`
+            radixGenerate();
+        }
+    }, 2000)
+}
+
+// Gravity Sort
+
+function gravitySort(arr){
+    var maxNumber = arr[0];
+    for (i = 0; i < arr.length; i++) {
+        maxNumber = Math.max(maxNumber, arr[i]);
+    }
+    noOfArrayAccess += 50
+    var helper = Array.from(Array(arr.length),() => new Array(maxNumber).fill(0))
+    
+    for(var i = 0; i < helper.length; i++){
+        while(arr[i] > 0)
+        helper[i][--arr[i]] = 1;       
+    }
+    noOfArrayAccess += 100
+
+    for(var i = 0; i < helper[0].length; i++){
+        var startPtr = 0;
+        var beads = 0;
+        while(startPtr < helper.length){
+            if(helper[startPtr++][i] == 1)
+                beads++;
+        }
+
+        while(--startPtr >= 0){
+            if(beads-- > 0)
+                helper[startPtr][i] = 1;
+            else
+                helper[startPtr][i] = 0;
+        }
+        gravityCounter(arr, helper)
+    }
+    gravityCounter(arr, helper)
+    myGenerationLoop()
+}
+
+var counter = 0
+function gravityCounter(arr, helper){
+    for(var i = 0; i < helper.length; i++){
+        var count = 0;
+        for(var j = 0; j < helper[0].length; j++){
+            if(helper[i][j] == 1)
+                count++;
+        }
+        arr[i] = count;
+    }
+    noOfArrayAccess += 5
+    if(counter == 10){
+        store(arr, noOfSwaps, noOfArrayAccess)
+        counter = 0
+    }
+    counter++
+}
+
 
 // Sorted
-function sorted() {
+function sorted(speed = 5) {
 
     select.style.pointerEvents = "all";
     generate.style.pointerEvents = "all";
@@ -426,7 +636,7 @@ function sorted() {
                 i = 0;
                 white()
             }
-        }, 1)
+        }, speed)
     }
     myGreenLoop();
 
@@ -437,7 +647,7 @@ function sorted() {
             if (i < numbers.length) {
                 white()
             }
-        }, 5)
+        },speed)
     }
 }
 

@@ -14,7 +14,7 @@
 <body>
     <div class="themes collapse">
         <div class="radios">
-            <input type="radio" style="--clr:teal;" class="color teal" name="themeColor">
+            <input type="radio" style="--clr:#008080;" class="color teal" name="themeColor">
             <input type="radio" style="--clr:#2d2d30;" class="color black" name="themeColor">
             <input type="radio" style="--clr:#ff7c62;" class="color pink" name="themeColor">
             <input type="radio" style="--clr:#a9743f;" class="color brown" name="themeColor">
@@ -22,7 +22,7 @@
         </div>
         <div class="arrow"><i class="fa fa-angle-down"></i></div>
     </div>
-    <h2 id="Title">Sorting Visualizer</h2>
+    <h2 id="Title">Quick Sort Visualizer</h2>
     <div class="visualizer">
         <div class="bars"></div>
     </div>
@@ -36,6 +36,10 @@
                 <option value="SelectionSort">Selection Sort</option>
                 <option value="InsertionSort">Insertion Sort</option>
                 <option value="BubbleSort">Bubble Sort</option>
+                <option value="CocktailSort">Cocktail Sort</option>
+                <option value="CountingSort">Counting Sort</option>
+                <option value="RadixSort">Radix Sort</option>
+                <option value="GravitySort">Gravity Sort</option>
             </select>
         </div>
         <button id="generate">Generate</button>
@@ -54,5 +58,4 @@
 </body>
 <!-- <script src="https://unpkg.com/scrollreveal"></script> -->
 <script src="./script.js"></script>
-
 </html>
