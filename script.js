@@ -33,31 +33,16 @@ window.onload = () => {
     });
 };
 
-let isCollapsed = true;
-
-function handleClickOrTouch(event) {
-    const target = event.target;
-    const isInsideThemes = themes.contains(target);
-
-    if (arrow.contains(target)) {
-        if (isCollapsed) {
-            arrow.innerHTML = `<i class="fa fa-angle-up"></i>`;
-            themes.classList.remove("collapse");
-            isCollapsed = false;
-        } else {
+arrow.addEventListener("click", () => {
+      let child = arrow.firstChild;
+      if (child.classList.contains("fa-angle-up")) {
             arrow.innerHTML = `<i class="fa fa-angle-down"></i>`;
             themes.classList.add("collapse");
-            isCollapsed = true;
-        }
-    } else if (!isInsideThemes && !isCollapsed) {
-        arrow.innerHTML = `<i class="fa fa-angle-down"></i>`;
-        themes.classList.add("collapse");
-        isCollapsed = true;
-    }
-}
-
-document.addEventListener("click", handleClickOrTouch);
-document.addEventListener("touchstart", handleClickOrTouch);
+      } else {
+            arrow.innerHTML = `<i class="fa fa-angle-up"></i>`;
+            themes.classList.remove("collapse");
+      }
+});
 
 const colors = document.querySelectorAll(".color");
 colors.forEach((color) => {
