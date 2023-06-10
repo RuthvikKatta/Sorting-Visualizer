@@ -35,23 +35,26 @@ window.onload = () => {
 
 let isCollapsed = true;
 
-document.addEventListener("click", handleClick);
+document.addEventListener("click", (event) => {
+    const target = event.target;
+    const isInsideThemes = themes.contains(target);
 
-document.addEventListener("touchstart", handleTouch);
-
-function handleClick(event) {
-    handleEvent(event.target);
-}
-
-function handleTouch(event) {
-    event.preventDefault();
-
-    const touch = event.touches[0];
-
-    const target = document.elementFromPoint(touch.clientX, touch.clientY);
-
-    handleEvent(target);
-}
+    if (arrow.contains(target)) {
+        if (isCollapsed) {
+            arrow.innerHTML = `<i class="fa fa-angle-up"></i>`;
+            themes.classList.remove("collapse");
+            isCollapsed = false;
+        } else {
+            arrow.innerHTML = `<i class="fa fa-angle-down"></i>`;
+            themes.classList.add("collapse");
+            isCollapsed = true;
+        }
+    } else if (!isInsideThemes && !isCollapsed) {
+        arrow.innerHTML = `<i class="fa fa-angle-down"></i>`;
+        themes.classList.add("collapse");
+        isCollapsed = true;
+    }
+});
 
 function handleEvent(target) {
     const isInsideThemes = themes.contains(target);
